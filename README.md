@@ -8,7 +8,7 @@ Simple background changer.
 
 ## Setup
 
-1. Include jQuery:
+1. Include jQuery.
 2. Include bgzy.js.
 3. Initiatie bgzy:
 ```javascript

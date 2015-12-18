@@ -79,7 +79,7 @@
 				nextElement.css("background-image", "url(" + this.options.images[backgroundIndex] + ")");
 
 				// The fx functions are executed in the context of the App object.
-				// This enables us to retrieve options with the fx functionslike so: 
+				// This enables us to retrieve options with the fx functions like so: 
 				// this.options.option.
 				var fxfn = fx[this.options.fx].bind(this);
 

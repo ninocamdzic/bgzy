@@ -20,12 +20,14 @@ All modern browsers and IE10+ are supported.
 3. Initiatie bgzy
 ```javascript
 <script>
-	bgzy.inst([
-		["img/bg1.jpg", "fadeOut"],
-		["img/bg2.jpg", "zoomFadeOut"],
-		["img/bg3.jpg", "slideLeft"]
-	],{
-		timeout: 3000,
-		showTicker: false
-	});
+	document.addEventListener("DOMContentLoaded", function(event) {
+		bgzy.inst([
+			["img/bg1.jpg", "fadeOut"],
+			["img/bg2.jpg", "zoomFadeOut"],
+			["img/bg3.jpg", "slideLeft"]
+		],{
+			timeout: 3000,
+			showTicker: false
+		});
+	}
 </script>

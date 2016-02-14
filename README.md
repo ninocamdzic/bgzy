@@ -54,3 +54,36 @@ All modern browsers and IE10+ are supported.
 |backgroundClass|bg|CSS class name of the background elements. Do not change if you don't know what you are doing.|
 |wrapperClass|bgzy|CSS class name of the wrapping element which contains the backgrounds. Do not change if you don't know what you are doing.|
 |zIndex|-9999|Makes sure the background elements are rendered behind all elements on a page. Only edit if backgrounds appear above other elements within your page.|
+
+### Changing options ###
+```javascript
+<script>
+	document.addEventListener("DOMContentLoaded", function(event) {
+		bgzy.inst([
+			"img/bg1.jpg",
+			"img/bg2.jpg",
+			"img/bg3.jpg",
+		],{
+			timeout: 5000,
+			showTicker: true
+		});
+	};
+</script>
+```
+
+## API
+|Method|Returns|Description|
+|---|---|---|
+|play|-|Starts the slideshow. This enables autoplay.|
+|stop|-|Stops the slideshow.|
+|next|-|Go to the next background image. This disables autoplay.|
+|prev|-|Go to the previous background image. This disables autoplay.|
+
+### Accessing the methods. ###
+```javascript
+	document.addEventListener("DOMContentLoaded", function(event) {
+		// Make sure you already have initialized bgzy.js before calling
+		// any API methods.
+		bgzy.inst().next();
+	}
+```

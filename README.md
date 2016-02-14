@@ -1,31 +1,31 @@
-# bgzy
+# bgzy.js
 
-Simple background changer.
+Elegant background slideshow.
 
-## Dependencies
+## Features
 
-- jQuery v1.11.2
+- Uses CSS3 transitions.
+- Set for each background a different transition.
+- No third party libraries required.
+- API for controlling the slideshow.
+
+## Browser support
+
+All modern browsers and IE10+ are supported.
 
 ## Setup
 
 1. Include bgzy.css
-2. Include jQuery
 2. Include bgzy.js
 3. Initiatie bgzy
 ```javascript
-<script>			
-	$(function() {
-		bgzy.inst({
-			images: [
-				"your_image_dir/bg1.jpg",
-				"your_image_dir/bg2.jpg",
-				"your_image_dir/bg3.jpg",
-				"your_image_dir/bg4.jpg"
-			],
-			fx: "fadeOut"
-		});
+<script>
+	bgzy.inst([
+		["img/bg1.jpg", "fadeOut"],
+		["img/bg2.jpg", "zoomFadeOut"],
+		["img/bg3.jpg", "slideLeft"]
+	],{
+		timeout: 3000,
+		showTicker: false
 	});
 </script>
-```
-## Todo
-- Image preloading.

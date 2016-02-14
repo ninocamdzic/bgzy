@@ -81,9 +81,7 @@ All modern browsers and IE10+ are supported.
 
 ### Accessing the methods. ###
 ```javascript
-	document.addEventListener("DOMContentLoaded", function(event) {
-		// Make sure you already have initialized bgzy.js before calling
-		// any API methods.
-		bgzy.inst().next();
-	}
+// Make sure you already have initialized bgzy.js before calling
+// any API methods.
+bgzy.inst().next();
 ```

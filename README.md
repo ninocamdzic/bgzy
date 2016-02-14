@@ -17,7 +17,22 @@ All modern browsers and IE10+ are supported.
 
 1. Include bgzy.css
 2. Include bgzy.js
-3. Initiatie bgzy
+3. Initiatie bgzy.
+
+### Simple initiation
+```javascript
+<script>
+	document.addEventListener("DOMContentLoaded", function(event) {
+		bgzy.inst([
+			"img/bg1.jpg",
+			"img/bg2.jpg",
+			"img/bg3.jpg",
+		]);
+	}
+</script>
+```
+
+### Different transitions
 ```javascript
 <script>
 	document.addEventListener("DOMContentLoaded", function(event) {
@@ -25,9 +40,7 @@ All modern browsers and IE10+ are supported.
 			["img/bg1.jpg", "fadeOut"],
 			["img/bg2.jpg", "zoomFadeOut"],
 			["img/bg3.jpg", "slideLeft"]
-		],{
-			timeout: 3000,
-			showTicker: false
-		});
+		]);
 	}
 </script>
+```

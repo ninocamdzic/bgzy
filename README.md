@@ -28,7 +28,7 @@ All modern browsers and IE10+ are supported.
 			"img/bg2.jpg",
 			"img/bg3.jpg",
 		]);
-	}
+	};
 </script>
 ```
 
@@ -41,6 +41,12 @@ All modern browsers and IE10+ are supported.
 			["img/bg2.jpg", "zoomFadeOut"],
 			["img/bg3.jpg", "slideLeft"]
 		]);
-	}
+	};
 </script>
 ```
+## Options
+|Option|Default|Description|
+|---|---|---|
+|timeout|3000|The time(miliseconds) to wait before switching to a new background.|
+|fx|fadeOut|Transition to use when switching backgrounds. Possible values are: fadeOut, slideUp, slideLeft and fadeZoom.|
+|fxDuration|500|Duration(miliseconds) of a transition.|

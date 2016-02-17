@@ -16,8 +16,8 @@ All modern browsers and IE10+ are supported.
 
 ## Setup
 
-1. Include bgzy.css
-2. Include bgzy.js
+1. Include bgzy.css.
+2. Include bgzy.js.
 3. Initiatie bgzy.
 
 ### Simple initiation
@@ -86,3 +86,5 @@ All modern browsers and IE10+ are supported.
 // any API methods.
 bgzy.inst().next();
 ```
+### Todo
+- Implement callbacks for stop, next and prev.

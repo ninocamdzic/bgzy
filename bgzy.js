@@ -142,9 +142,7 @@
 							var imageUrl = _getImageUrl(images[i]);
 
 							if(this.src.indexOf(imageUrl) > -1) {
-								console.log(this.src + " - " + imageUrl);
 								backgroundImageIndex = i;
-								console.log("Found at: " + i);
 								break;
 							}
 						}

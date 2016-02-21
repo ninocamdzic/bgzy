@@ -1,5 +1,5 @@
 /**
- * bgzy.js vX.X.X
+ * bgzy.js v0.1.1
  *
  * Copyright(c) Nino Camdzic 2016
  * Released under MIT license.

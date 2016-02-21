@@ -44,6 +44,22 @@
 			}
 		}
 
+		function _getImageUrl(image) {
+			if(image instanceof Array) {
+				return image[0];
+			}
+
+			return image;
+		}
+
+		function _getImageFx(image) {
+			if(image instanceof Array) {
+				return image[1];
+			}
+
+			return self.conf.fx;
+		}
+
 		function _startTicker() {
 			tickerElement.style.opacity = "1.0";
 			tickerElement.style.transitionDuration = self.conf.timeout + "ms";
@@ -101,16 +117,9 @@
 			// Preload images before playing.
 			for(var i = 0; i < images.length; i++) {
 				var img = document.createElement("img"),
-					url = images[i];
+					url = _getImageUrl(images[i]);
 
 				img.addEventListener("load", cb);
-
-				// If we are dealing with an array we retrieve the image url from
-				// the first element of the array.
-				if(url instanceof Array) {
-					url = images[i][0];
-				}
-
 				img.src = url;
 			}
 		}
@@ -130,8 +139,12 @@
 
 						// Determine the background index of the loaded image.
 						for(var i = 0; i < images.length; i++) {
-							if(this.src.indexOf(images[i])) {
+							var imageUrl = _getImageUrl(images[i]);
+
+							if(this.src.indexOf(imageUrl) > -1) {
+								console.log(this.src + " - " + imageUrl);
 								backgroundImageIndex = i;
+								console.log("Found at: " + i);
 								break;
 							}
 						}
@@ -169,17 +182,10 @@
 
 			var activeElement = elements[activeElementIndex],
 				nextElement = elements[nextElementIndex],
-				image = images[backgroundImageIndex],
-				imageFx = self.conf.fx;
+				imageUrl = _getImageUrl(images[backgroundImageIndex]),
+				imageFx = _getImageFx(images[currentbackgroundImageIndex]);
 
-			// If we are dealing with an array we retrieve the image url from the
-			// first array element and the used animation from the second.
-			if(image instanceof Array) {
-				image = images[backgroundImageIndex][0];
-				imageFx = images[currentbackgroundImageIndex][1];
-			}
-
-			nextElement.style.backgroundImage = "url(" + image + ")";
+			nextElement.style.backgroundImage = "url(" + imageUrl + ")";
 			fx = self.fx[imageFx](activeElement, nextElement, self.conf);
 			backgroundElementTransitionEndCount = 0;
 			fx.run();

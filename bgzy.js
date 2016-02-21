@@ -18,7 +18,7 @@
 			tickerElement,
 			activeElementIndex = 0,
 			nextElementIndex = -1,
-			backgroundIndex = 0,
+			backgroundImageIndex = 0,
 			fx,
 			timer,
 			busy = false,
@@ -127,6 +127,14 @@
 					// Set the first background image on the active element.
 					if(loadedImages === 1) {
 						elements[activeElementIndex].style.backgroundImage = "url('" + this.src + "')";
+
+						// Determine the background index of the loaded image.
+						for(var i = 0; i < images.length; i++) {
+							if(this.src.indexOf(images[i])) {
+								backgroundImageIndex = i;
+								break;
+							}
+						}
 					}
 
 					// Once every image is loaded start playing.
@@ -149,26 +157,26 @@
 			busy = true;
 			dir = dir ? dir : 1;
 			nextElementIndex = activeElementIndex === elements.length - 1 ? 0 : activeElementIndex + 1;
-			var currentBackgroundIndex = backgroundIndex;
+			var currentbackgroundImageIndex = backgroundImageIndex;
 
-			if(backgroundIndex === images.length - 1 && dir === 1) {
-				backgroundIndex = 0;
-			} else if(backgroundIndex === 0 && dir === -1) {
-				backgroundIndex = images.length - 1;
+			if(backgroundImageIndex === images.length - 1 && dir === 1) {
+				backgroundImageIndex = 0;
+			} else if(backgroundImageIndex === 0 && dir === -1) {
+				backgroundImageIndex = images.length - 1;
 			} else {
-				backgroundIndex += dir;
+				backgroundImageIndex += dir;
 			}
 
 			var activeElement = elements[activeElementIndex],
 				nextElement = elements[nextElementIndex],
-				image = images[backgroundIndex],
+				image = images[backgroundImageIndex],
 				imageFx = self.conf.fx;
 
 			// If we are dealing with an array we retrieve the image url from the
 			// first array element and the used animation from the second.
 			if(image instanceof Array) {
-				image = images[backgroundIndex][0];
-				imageFx = images[currentBackgroundIndex][1];
+				image = images[backgroundImageIndex][0];
+				imageFx = images[currentbackgroundImageIndex][1];
 			}
 
 			nextElement.style.backgroundImage = "url(" + image + ")";

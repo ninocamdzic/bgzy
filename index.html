@@ -1,7 +1,94 @@
 <!DOCTYPE html>
 <html>
-  <head>
-  </head>
-  <body>
-  </body>
+
+<head>
+	<link rel="stylesheet" href="css/bgzy.css">
+	<style>
+		body {
+			margin: 0;
+			background-color: #fff;
+			color: #000;
+			font-family: Arial, Helvetica, sans-serif;
+			font-size: 14px;
+		}
+
+		.gallery {
+			position: absolute;
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			padding: 10px;
+			background-color: rgba(255, 255, 255, 0.6);
+			color: #000;
+		}
+
+		.gallery .nav a {
+			display: inline-block;
+			font-size: 3em;
+			text-decoration: none;
+			color: #fff;
+			margin: 0;
+			padding: 0;
+			vertical-align: middle;
+		}
+
+		.gallery .nav a:hover {
+			color: #000;
+		}
+
+		.gallery .desc {
+			flex-grow: 2;
+		}
+
+		.gallery .desc p {
+			margin: 0;
+			padding: 10px;
+			border-radius: 5px;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="content">
+		<div class="gallery">
+			<div class="nav">
+				<a href="#" id="prev">&lt;</a>
+			</div>
+			<div class="desc">
+				<p>Bgzy makes it possible to have changing backgrounds on a page. It does not require third party libraries and works with almost all browsers (IE10+). Check out the GitHub to find out more about it.</p>
+			</div>
+			<div class="nav">
+				<a href="#" id="next">&gt;</a>
+			</div>
+		</div>
+	</div>
+	<script src="bgzy.js"></script>
+	<script>
+		document.addEventListener("DOMContentLoaded", function (e) {
+			// Initialize bgzy.
+			bgzy.inst([
+				"img/bg1.jpg",
+				"img/bg2.jpg",
+				"img/bg3.jpg"
+			],{
+				timeout: 5000,
+				showTicker: true
+			});
+
+			var prev = document.getElementById("prev");
+			var next = document.getElementById("next");
+
+			prev.addEventListener("click", function(e) {
+				bgzy.inst().prev();
+			});
+
+			next.addEventListener("click", function(e) {
+				bgzy.inst().next();
+			});
+		});
+	</script>
+</body>
 </html>

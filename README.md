@@ -23,7 +23,7 @@ All modern browsers and IE10+ are supported.
 ### Simple initiation
 ```javascript
 <script>
-	document.addEventListener("DOMContentLoaded", function(event) {
+	document.addEventListener("DOMContentLoaded", function(e) {
 		bgzy.inst([
 			"img/bg1.jpg",
 			"img/bg2.jpg",
@@ -36,13 +36,13 @@ All modern browsers and IE10+ are supported.
 ### Different transitions
 ```javascript
 <script>
-	document.addEventListener("DOMContentLoaded", function(event) {
+	document.addEventListener("DOMContentLoaded", function(e) {
 		bgzy.inst([
 			["img/bg1.jpg", "fadeOut"],
 			["img/bg2.jpg", "zoomFadeOut"],
 			["img/bg3.jpg", "slideLeft"]
 		]);
-	};
+	});
 </script>
 ```
 ## Options
@@ -68,7 +68,7 @@ All modern browsers and IE10+ are supported.
 			timeout: 5000,
 			showTicker: true
 		});
-	};
+	});
 </script>
 ```
 

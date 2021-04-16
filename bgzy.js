@@ -1,293 +1,296 @@
 /**
- * bgzy.js v0.1.1
+ * bgzy.js v0.1.2
  *
- * Copyright(c) Nino Camdzic 2016
+ * Copyright(c) Nino Camdzic 2021
  * Released under MIT license.
  */
-(function(name, window, document) {
+(function(window, document) {
 	"use strict";
 
-	var ns = window[name] = {},
-		inst,
+	var ns = window.bgzy = {};
+	var images = null,
+		loadedImages = 0,
+		ready = false,
+		elements = [],
+		tickerElement,
+		activeElementIndex = 0,
+		nextElementIndex = -1,
+		backgroundImageIndex = 0,
+		fx,
+		timer,
+		busy = false,
+		cancel = false,
+		backgroundElementTransitionEndCount = 0;
 
-	App = function(images, conf) {
-		var self = this,
-			loadedImages = 0,
-			ready = false,
-			elements = [],
-			tickerElement,
-			activeElementIndex = 0,
-			nextElementIndex = -1,
-			backgroundImageIndex = 0,
-			fx,
-			timer,
-			busy = false,
-			cancel = false,
-			backgroundElementTransitionEndCount = 0;
+	// Default conf.
+	ns.conf = {
+		zIndex: -9999,
+		wrapperClass: "bgzy",
+		backgroundClass: "bg",
+		showTicker: false,
+		tickerClass: "ticker",
+		timeout: 3000,
+		fx: "fadeOut",
+		fxDuration: 1000
+	};
 
-		// Default conf.
-		this.conf = {
-			zIndex: -9999,
-			wrapperClass: "bgzy",
-			backgroundClass: "bg",
-			showTicker: false,
-			tickerClass: "ticker",
-			timeout: 3000,
-			fx: "fadeOut",
-			fxDuration: 1000
-		};
+	function getImageUrl(image) {
+		if(image instanceof Array) {
+			return image[0];
+		}
 
-		// Copy the specified configuration.
+		return image;
+	}
+
+	function getImageFx(image) {
+		if(image instanceof Array) {
+			return image[1];
+		}
+
+		return ns.conf.fx;
+	}
+
+	function startTicker() {
+		tickerElement.style.opacity = "1.0";
+		tickerElement.style.transitionDuration = ns.conf.timeout + "ms";
+		tickerElement.className = ns.conf.tickerClass + " transition trigger";
+	}
+
+	function stopTicker() {
+		tickerElement.style.transitionDuration = "";
+		tickerElement.className = ns.conf.tickerClass;
+		tickerElement.style.opacity = "0.0";
+	}
+
+	/**
+	 * Copy the specified configuration.
+	 * 
+	 * @param conf User specified configuration.
+	 */
+	function initConf(conf) {
 		for(var p in conf) {
 			if(conf.hasOwnProperty(p)) {
-				this.conf[p] = conf[p];
+				ns.conf[p] = conf[p];
 			}
 		}
+	}
 
-		function _getImageUrl(image) {
-			if(image instanceof Array) {
-				return image[0];
-			}
+	/**
+	 * DOM initialization.
+	 */
+	function initDom() {
+		var wrap = document.createElement("div"),
+			zIndex = ns.conf.zIndex;
 
-			return image;
+		wrap.className = ns.conf.wrapperClass;
+		wrap.addEventListener("transitionend", transitionEnd, false);
+
+		// Create the needed background image holding elements.
+		for(var i = 0; i < 2; i++) {
+			var element = document.createElement("div");
+			element.className = ns.conf.backgroundClass;
+			element.style.zIndex = zIndex--;
+
+			wrap.appendChild(element);
+			elements.push(element);
 		}
 
-		function _getImageFx(image) {
-			if(image instanceof Array) {
-				return image[1];
-			}
+		// Create the progressbar.
+		tickerElement = document.createElement("div");
+		tickerElement.className = ns.conf.tickerClass;
 
-			return self.conf.fx;
+		if(!ns.conf.showTicker) {
+			tickerElement.style.display = "none";
 		}
 
-		function _startTicker() {
-			tickerElement.style.opacity = "1.0";
-			tickerElement.style.transitionDuration = self.conf.timeout + "ms";
-			tickerElement.className = self.conf.tickerClass + " transition trigger";
+		wrap.appendChild(tickerElement);
+		document.body.appendChild(wrap);
+	}
+
+	/**
+	 * Preloads the specified images.
+	 *
+	 * @param images Array of image paths.
+	 * @param cb Callback method which is called for every loaded image.
+	 *		  Within the callback method this will reference the context
+	 *		  which is set by the load event. This is usualy the element for
+	 *		  which the event fired.
+	 */
+	function loadImages(images, cb) {
+		// Preload images before playing.
+		for(var i = 0; i < images.length; i++) {
+			var img = document.createElement("img"),
+				url = getImageUrl(images[i]);
+
+			img.addEventListener("load", cb);
+			img.src = url;
 		}
+	}
 
-		function _stopTicker() {
-			tickerElement.style.transitionDuration = "";
-			tickerElement.className = self.conf.tickerClass;
-			tickerElement.style.opacity = "0.0";
-		}
+	/**
+	 * Main initialization.
+	 */
+	function init(conf) {
+		if(images instanceof Array && images.length > 0) {
+			initConf(conf);
+			initDom();
+			loadImages(images, function() {
+				loadedImages++;
 
-		/**
-		 * DOM initialization.
-		 */
-		function _initDom() {
-			var wrap = document.createElement("div"),
-				zIndex = self.conf.zIndex;
+				// Set the first background image on the active element.
+				if(loadedImages === 1) {
+					elements[activeElementIndex].style.backgroundImage = "url('" + this.src + "')";
 
-			wrap.className = self.conf.wrapperClass;
-			wrap.addEventListener("transitionend", _transitionEnd, false);
+					// Determine the background index of the loaded image.
+					for(var i = 0; i < images.length; i++) {
+						var imageUrl = getImageUrl(images[i]);
 
-			// Create the needed background image holding elements.
-			for(var i = 0; i < 2; i++) {
-				var element = document.createElement("div");
-				element.className = self.conf.backgroundClass;
-				element.style.zIndex = zIndex--;
-
-				wrap.appendChild(element);
-				elements.push(element);
-			}
-
-			// Create the progressbar.
-			tickerElement = document.createElement("div");
-			tickerElement.className = self.conf.tickerClass;
-
-			if(!self.conf.showTicker) {
-				tickerElement.style.display = "none";
-			}
-
-			wrap.appendChild(tickerElement);
-			document.body.appendChild(wrap);
-		}
-
-		/**
-		 * Preloads the specified images.
-		 *
-		 * @param images Array of image paths.
-		 * @param cb Callback method which is called for every loaded image.
-		 *		  Within the callback method this will reference the context
-		 *		  which is set by the load event. This is usualy the element for
-		 *		  which the event fired.
-		 */
-		function _loadImages(images, cb) {
-			// Preload images before playing.
-			for(var i = 0; i < images.length; i++) {
-				var img = document.createElement("img"),
-					url = _getImageUrl(images[i]);
-
-				img.addEventListener("load", cb);
-				img.src = url;
-			}
-		}
-
-		/**
-		 * Main initialization.
-		 */
-		function _init() {
-			if(images instanceof Array && images.length > 0) {
-				_initDom();
-				_loadImages(images, function() {
-					loadedImages++;
-
-					// Set the first background image on the active element.
-					if(loadedImages === 1) {
-						elements[activeElementIndex].style.backgroundImage = "url('" + this.src + "')";
-
-						// Determine the background index of the loaded image.
-						for(var i = 0; i < images.length; i++) {
-							var imageUrl = _getImageUrl(images[i]);
-
-							if(this.src.indexOf(imageUrl) > -1) {
-								backgroundImageIndex = i;
-								break;
-							}
+						if(this.src.indexOf(imageUrl) > -1) {
+							backgroundImageIndex = i;
+							break;
 						}
 					}
-
-					// Once every image is loaded start playing.
-					if(images.length === loadedImages) {
-						ready = true;
-						self.play();
-					}
-				});
-			} else {
-				throw new Error("No images specified.");
-			}
-		}
-
-		/**
-		 * Show the next or previous background image.
-		 *
-		 * @param dir Direction. If not specified default is 1.
-		 */
-		function _play(dir) {
-			busy = true;
-			dir = dir ? dir : 1;
-			nextElementIndex = activeElementIndex === elements.length - 1 ? 0 : activeElementIndex + 1;
-			var currentbackgroundImageIndex = backgroundImageIndex;
-
-			if(backgroundImageIndex === images.length - 1 && dir === 1) {
-				backgroundImageIndex = 0;
-			} else if(backgroundImageIndex === 0 && dir === -1) {
-				backgroundImageIndex = images.length - 1;
-			} else {
-				backgroundImageIndex += dir;
-			}
-
-			var activeElement = elements[activeElementIndex],
-				nextElement = elements[nextElementIndex],
-				imageUrl = _getImageUrl(images[backgroundImageIndex]),
-				imageFx = _getImageFx(images[currentbackgroundImageIndex]);
-
-			nextElement.style.backgroundImage = "url(" + imageUrl + ")";
-			fx = self.fx[imageFx](activeElement, nextElement, self.conf);
-			backgroundElementTransitionEndCount = 0;
-			fx.run();
-		}
-
-		function _stop() {
-			if(self.conf.showTicker) {
-				_stopTicker();
-			} else {
-				window.clearTimeout(timer);
-			}
-
-			cancel = true;
-		}
-
-		function _transitionEnd(e) {
-			var clazz = e.target.className;
-
-			if(clazz === self.conf.backgroundClass) {
-				// Make sure _postFx is only executed ONCE. We don't want it to executed
-				// when for multiple properties transitions end.
-				if(backgroundElementTransitionEndCount === 0) {
-					_postFx();
 				}
 
-				backgroundElementTransitionEndCount++;
-			} else if(self.conf.showTicker && clazz.indexOf(self.conf.tickerClass) > -1) {
-				_stopTicker();
-				_play();
-			}
-		}
-
-		/**
-		 * Reset elements. This method is executed after each background
-		 * transition.
-		 */
-		function _postFx() {
-			fx.cleanUp();
-
-			elements[activeElementIndex].style.transition = "";
-			elements[activeElementIndex].style.zIndex =  self.conf.zIndex - 1;
-			elements[nextElementIndex].style.zIndex = self.conf.zIndex;
-			activeElementIndex = nextElementIndex;
-			busy = false;
-
-			if(timer) {
-				window.clearTimeout(timer);
-			}
-
-			// Prevent further playing if cancel is set to true.
-			if(!cancel) {
-				self.play();
-			} else {
-				cancel = false;
-			}
-		}
-
-		/**
-		 * Starts the slideshow.
-		 */
-		this.play = function() {
-			if(ready && !busy) {
-				if(self.conf.showTicker) {
-					_startTicker();
-				} else {
-					timer = window.setTimeout(_play, self.conf.timeout);
+				// Once every image is loaded start playing.
+				if(images.length === loadedImages) {
+					ready = true;
+					ns.play();
 				}
-			}
-		};
+			});
+		} else {
+			throw new Error("No images specified.");
+		}
+	}
 
-		/**
-		 * Stop/pause the slideshow.
-		 */
-		this.stop = function() {
-			if(ready) {
-				_stop();
-			}
-		};
+	/**
+	 * Show the next or previous background image.
+	 *
+	 * @param dir Direction. If not specified default is 1.
+	 */
+	function play(dir) {
+		busy = true;
+		dir = dir ? dir : 1;
+		nextElementIndex = activeElementIndex === elements.length - 1 ? 0 : activeElementIndex + 1;
+		var currentbackgroundImageIndex = backgroundImageIndex;
 
-		/**
-		 * Go to the next background image. This disables autoplay.
-		 */
-		this.next = function() {
-			if(ready && !busy) {
-				_stop();
-				_play();
-			}
-		};
+		if(backgroundImageIndex === images.length - 1 && dir === 1) {
+			backgroundImageIndex = 0;
+		} else if(backgroundImageIndex === 0 && dir === -1) {
+			backgroundImageIndex = images.length - 1;
+		} else {
+			backgroundImageIndex += dir;
+		}
 
-		/**
-		 * Go to the previous background image. This disables autoplay.
-		 */
-		this.prev = function() {
-			if(ready && !busy) {
-				_stop();
-				_play(-1);
-			}
-		};
+		var activeElement = elements[activeElementIndex],
+			nextElement = elements[nextElementIndex],
+			imageUrl = getImageUrl(images[backgroundImageIndex]),
+			imageFx = getImageFx(images[currentbackgroundImageIndex]);
 
-		_init();
+		nextElement.style.backgroundImage = "url(" + imageUrl + ")";
+		fx = ns.fx[imageFx](activeElement, nextElement, ns.conf);
+		backgroundElementTransitionEndCount = 0;
+		fx.run();
+	}
+
+	function stop() {
+		if(ns.conf.showTicker) {
+			stopTicker();
+		} else {
+			window.clearTimeout(timer);
+		}
+
+		cancel = true;
+	}
+
+	function transitionEnd(e) {
+		var clazz = e.target.className;
+
+		// Background transition.
+		if(clazz === ns.conf.backgroundClass) {
+			// Make sure postFx is only executed ONCE. We don't want it to execute
+			// when for multiple properties transitions end.
+			if(backgroundElementTransitionEndCount === 0) {
+				postFx();
+			}
+
+			backgroundElementTransitionEndCount++;
+
+		// Ticker transition.
+		} else if(ns.conf.showTicker && clazz.indexOf(ns.conf.tickerClass) > -1) {
+			stopTicker();
+			play();
+		}
+	}
+
+	/**
+	 * Reset elements. This method is executed after each background transition.
+	 */
+	function postFx() {
+		fx.cleanUp();
+
+		elements[activeElementIndex].style.transition = "";
+		elements[activeElementIndex].style.zIndex =  ns.conf.zIndex - 1;
+		elements[nextElementIndex].style.zIndex = ns.conf.zIndex;
+		activeElementIndex = nextElementIndex;
+		busy = false;
+
+		if(timer) {
+			window.clearTimeout(timer);
+		}
+
+		// Prevent further playing if cancel is set to true.
+		if(!cancel) {
+			ns.play();
+		} else {
+			cancel = false;
+		}
+	}
+
+	/**
+	 * Starts the slideshow.
+	 */
+	 ns.play = function() {
+		if(ready && !busy) {
+			if(ns.conf.showTicker) {
+				startTicker();
+			} else {
+				timer = window.setTimeout(play, ns.conf.timeout);
+			}
+		}
+	};
+
+	/**
+	 * Stop/pause the slideshow.
+	 */
+	ns.stop = function() {
+		if(ready) {
+			stop();
+		}
+	};
+
+	/**
+	 * Go to the next background image. This disables autoplay.
+	 */
+	ns.next = function() {
+		if(ready && !busy) {
+			stop();
+			play();
+		}
+	};
+
+	/**
+	 * Go to the previous background image. This disables autoplay.
+	 */
+	ns.prev = function() {
+		if(ready && !busy) {
+			stop();
+			play(-1);
+		}
 	};
 
 	// Transitions.
-	App.prototype.fx = ns.fx = {
+	ns.fx = {
 		fadeOut: function(activeElement, nextElement, conf) {
 			return {
 				// Reset the background element to it's default state.
@@ -348,14 +351,12 @@
 	/**
 	 * Initializes the slideshow and starts playing.
 	 *
-	 * @param images Array of paths to images.
+	 * @param imgs Array of paths to images.
 	 * @param conf Configuration object.
 	 */
-	ns.inst = function(images, conf) {
-		if(!inst) {
-			inst = new App(images, conf);
-		}
+	ns.init = function(imgs, conf) {
+		images = imgs;
 
-		return inst;
+		init(conf);
 	};
-})("bgzy", window, document);
+})(window, document);

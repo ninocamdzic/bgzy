@@ -2,6 +2,9 @@
 <html>
 
 <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 	<link rel="stylesheet" href="css/bgzy.css">
 	<style>
 		body {
@@ -21,22 +24,22 @@
 			right: 0;
 			bottom: 0;
 			padding: 10px;
-			background-color: rgba(255, 255, 255, 0.6);
-			color: #000;
+			background-color: rgba(0, 0, 0, 0.8);
+			color: #fff;
 		}
 
 		.gallery .nav a {
 			display: inline-block;
 			font-size: 3em;
 			text-decoration: none;
-			color: #fff;
+			color: #333;
 			margin: 0;
 			padding: 0;
 			vertical-align: middle;
 		}
 
 		.gallery .nav a:hover {
-			color: #000;
+			color: #fff;
 		}
 
 		.gallery .desc {
@@ -69,10 +72,10 @@
 	<script>
 		document.addEventListener("DOMContentLoaded", function (e) {
 			// Initialize bgzy.
-			bgzy.inst([
-				"img/bg1.jpg",
-				"img/bg2.jpg",
-				"img/bg3.jpg"
+			bgzy.init([
+				["img/bg1.jpg", "fadeOut"],
+				["img/bg2.jpg", "zoomFadeOut"],
+				["img/bg3.jpg", "slideLeft"]
 			],{
 				timeout: 5000,
 				showTicker: true
@@ -82,11 +85,11 @@
 			var next = document.getElementById("next");
 
 			prev.addEventListener("click", function(e) {
-				bgzy.inst().prev();
+				bgzy.prev();
 			});
 
 			next.addEventListener("click", function(e) {
-				bgzy.inst().next();
+				bgzy.next();
 			});
 		});
 	</script>

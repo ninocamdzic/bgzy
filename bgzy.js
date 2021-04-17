@@ -29,6 +29,7 @@
 		backgroundClass: "bg",
 		showTicker: false,
 		tickerClass: "ticker",
+		autoplay: true,
 		timeout: 3000,
 		fx: "fadeOut",
 		fxDuration: 1000
@@ -76,16 +77,16 @@
 	}
 
 	/**
-	 * DOM initialization.
+	 * Creates the needed elements.
 	 */
-	function initDom() {
+	function initElements() {
 		var wrap = document.createElement("div"),
 			zIndex = ns.conf.zIndex;
 
 		wrap.className = ns.conf.wrapperClass;
 		wrap.addEventListener("transitionend", transitionEnd, false);
 
-		// Create the needed background image holding elements.
+		// Create the needed background image container elements.
 		for(var i = 0; i < 2; i++) {
 			var element = document.createElement("div");
 			element.className = ns.conf.backgroundClass;
@@ -95,15 +96,13 @@
 			elements.push(element);
 		}
 
-		// Create the progressbar.
-		tickerElement = document.createElement("div");
-		tickerElement.className = ns.conf.tickerClass;
-
-		if(!ns.conf.showTicker) {
-			tickerElement.style.display = "none";
+		// Create the ticker element.
+		if(ns.conf.showTicker) {
+			tickerElement = document.createElement("div");
+			tickerElement.className = ns.conf.tickerClass;
+			wrap.appendChild(tickerElement);
 		}
 
-		wrap.appendChild(tickerElement);
 		document.body.appendChild(wrap);
 	}
 
@@ -133,7 +132,7 @@
 	function init(conf) {
 		if(images instanceof Array && images.length > 0) {
 			initConf(conf);
-			initDom();
+			initElements();
 			loadImages(images, function() {
 				loadedImages++;
 
@@ -152,10 +151,16 @@
 					}
 				}
 
-				// Once every image is loaded start playing.
+				// Once every image is loaded, start playing.
 				if(images.length === loadedImages) {
 					ready = true;
-					ns.play();
+
+					if(ns.conf.autoplay === true) {
+						// Do not use DOMContentReady here. Sometimes it doesn't work in Firefox.
+						window.addEventListener("load", function(e) {
+							ns.play();
+						});
+					}
 				}
 			});
 		} else {
@@ -166,7 +171,7 @@
 	/**
 	 * Show the next or previous background image.
 	 *
-	 * @param dir Direction. If not specified default is 1.
+	 * @param dir Direction. If not specified defaults to 1.
 	 */
 	function play(dir) {
 		busy = true;
@@ -203,6 +208,11 @@
 		cancel = true;
 	}
 
+	/**
+	 * Transitionend handler.
+	 * 
+	 * @param e Event 
+	 */
 	function transitionEnd(e) {
 		var clazz = e.target.className;
 

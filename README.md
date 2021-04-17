@@ -1,7 +1,7 @@
 # bgzy.js
 
 Elegant background slideshow.
-Check out a working example at: http://exiled-bits.nl/bgzy/
+Check out a working example at: https://ninocamdzic.github.io/bgzy
 
 ## Features
 
@@ -60,7 +60,7 @@ All modern browsers and IE10+ are supported.
 ```javascript
 <script>
 	document.addEventListener("DOMContentLoaded", function(event) {
-		bgzy.inst([
+		bgzy.init([
 			"img/bg1.jpg",
 			"img/bg2.jpg",
 			"img/bg3.jpg",
@@ -84,7 +84,7 @@ All modern browsers and IE10+ are supported.
 ```javascript
 // Make sure you already have initialized bgzy.js before calling
 // any API methods.
-bgzy.inst().next();
+bgzy.next();
 ```
 ### Todo
 - Implement callbacks for stop, next and prev.

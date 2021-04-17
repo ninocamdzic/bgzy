@@ -46,6 +46,10 @@
 			flex-grow: 2;
 		}
 
+		.gallery .desc a {
+			color: #fff;
+		}
+
 		.gallery .desc p {
 			margin: 0;
 			padding: 10px;
@@ -61,7 +65,7 @@
 				<a href="#" id="prev">&lt;</a>
 			</div>
 			<div class="desc">
-				<p>Bgzy makes it possible to have changing backgrounds on a page. It does not require third party libraries and works with almost all browsers (IE10+). Check out the GitHub to find out more about it.</p>
+				<p>Bgzy makes it possible to have changing backgrounds on a page. It does not require third party libraries and works with almost all browsers (IE10+). Check out the <a href="https://www.github.io/ninocamdzic/bgzy">GitHub</a> page for more info.</p>
 			</div>
 			<div class="nav">
 				<a href="#" id="next">&gt;</a>
@@ -70,27 +74,34 @@
 	</div>
 	<script src="bgzy.js"></script>
 	<script>
-		document.addEventListener("DOMContentLoaded", function (e) {
-			// Initialize bgzy.
-			bgzy.init([
-				["img/bg1.jpg", "fadeOut"],
-				["img/bg2.jpg", "zoomFadeOut"],
-				["img/bg3.jpg", "slideLeft"]
-			],{
-				timeout: 5000,
-				showTicker: true
-			});
+		// document.addEventListener("DOMContentLoaded", function (e) {
 
-			var prev = document.getElementById("prev");
-			var next = document.getElementById("next");
+		// });
 
-			prev.addEventListener("click", function(e) {
-				bgzy.prev();
-			});
+		// Initialize bgzy.
+		bgzy.init([
+			["img/bg1.jpg", "fadeOut"],
+			["img/bg2.jpg", "zoomFadeOut"],
+			["img/bg3.jpg", "slideLeft"]
+		],{
+			timeout: 5000,
+			showTicker: true
+		});
 
-			next.addEventListener("click", function(e) {
-				bgzy.next();
-			});
+		// Initialize controls.
+		var prev = document.getElementById("prev");
+		var next = document.getElementById("next");
+
+		prev.addEventListener("click", function(e) {
+			bgzy.prev();
+		});
+
+		next.addEventListener("click", function(e) {
+			bgzy.next();
+		});
+
+		window.addEventListener("load", function(e) {
+			bgzy.play();
 		});
 	</script>
 </body>

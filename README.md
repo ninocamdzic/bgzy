@@ -1,53 +1,41 @@
 # bgzy.js
-
 Elegant background slideshow.
 Check out a working example at: https://ninocamdzic.github.io/bgzy
 
-## Features
-
+## 1. Features
 - Uses CSS3 transitions.
 - Set for each background a different transition.
 - No third party libraries required.
 - API for controlling the slideshow.
 
-## Browser support
+## 2. Browser support
+All modern browsers and IE11+ are supported.
 
-All modern browsers and IE10+ are supported.
-
-## Setup
-
+## 3. Setup
 1. Include bgzy.css.
 2. Include bgzy.js.
 3. Initiatie bgzy.
 
 ### Simple initiation
 ```javascript
-<script>
-	document.addEventListener("DOMContentLoaded", function(e) {
-		bgzy.inst([
-			"img/bg1.jpg",
-			"img/bg2.jpg",
-			"img/bg3.jpg",
-		]);
-	};
-</script>
+bgzy.inst([
+	"img/bg1.jpg",
+	"img/bg2.jpg",
+	"img/bg3.jpg",
+]);
 ```
-
 ### Different transitions
 ```javascript
-<script>
-	document.addEventListener("DOMContentLoaded", function(e) {
-		bgzy.inst([
-			["img/bg1.jpg", "fadeOut"],
-			["img/bg2.jpg", "zoomFadeOut"],
-			["img/bg3.jpg", "slideLeft"]
-		]);
-	});
-</script>
+bgzy.inst([
+	["img/bg1.jpg", "fadeOut"],
+	["img/bg2.jpg", "zoomFadeOut"],
+	["img/bg3.jpg", "slideLeft"]
+]);
 ```
-## Options
+## 4. Options
 |Option|Default|Description|
 |---|---|---|
+|autoplay|true|Whether to start the slideshow when the page loads.
 |timeout|3000|The time(miliseconds) to wait before switching to a new background.|
 |fx|fadeOut|Transition to use when switching backgrounds. Possible values are: **fadeOut, slideUp, slideLeft and fadeZoom**.|
 |fxDuration|500|Duration(miliseconds) of a transition.|
@@ -58,21 +46,16 @@ All modern browsers and IE10+ are supported.
 
 ### Changing options ###
 ```javascript
-<script>
-	document.addEventListener("DOMContentLoaded", function(event) {
-		bgzy.init([
-			"img/bg1.jpg",
-			"img/bg2.jpg",
-			"img/bg3.jpg",
-		],{
-			timeout: 5000,
-			showTicker: true
-		});
-	});
-</script>
+bgzy.init([
+	"img/bg1.jpg",
+	"img/bg2.jpg",
+	"img/bg3.jpg",
+],{
+	timeout: 5000,
+	showTicker: true
+});
 ```
-
-## API
+## 5. API
 |Method|Returns|Description|
 |---|---|---|
 |play|-|Starts the slideshow. This enables autoplay.|

@@ -1,5 +1,5 @@
 /*
- 	bgzy.js v0.1.2
+ 	bgzy.js v0.1.3
 	
 	The MIT License (MIT)
 
@@ -25,6 +25,8 @@
  */
 (function(window, document) {
 	"use strict";
+
+	var NOT_INITIALIZED_ERR = "Bgzy.js must be initialized before calling any API methods.";
 
 	var ns = window.bgzy = {};
 	var images = null,
@@ -135,7 +137,6 @@
 	 *		  which the event fired.
 	 */
 	function loadImages(images, cb) {
-		// Preload images before playing.
 		for(var i = 0; i < images.length; i++) {
 			var img = document.createElement("img"),
 				url = getImageUrl(images[i]);
@@ -278,43 +279,65 @@
 
 	/**
 	 * Starts the slideshow.
+	 * 
+	 * @throws Error if bgzy.js is not initialized.
 	 */
 	 ns.play = function() {
-		if(ready && !busy) {
-			if(ns.conf.showTicker) {
-				startTicker();
-			} else {
-				timer = window.setTimeout(play, ns.conf.timeout);
+		if(ready) {
+			if(!busy) {
+				if(ns.conf.showTicker) {
+					startTicker();
+				} else {
+					timer = window.setTimeout(play, ns.conf.timeout);
+				}
 			}
+		} else {
+			throw new Error(NOT_INITIALIZED_ERR);
 		}
 	};
 
 	/**
 	 * Stop/pause the slideshow.
+	 * 
+	 * @throws Error if bgzy.js is not initialized.
 	 */
 	ns.stop = function() {
 		if(ready) {
 			stop();
+		} else {
+			throw new Error(NOT_INITIALIZED_ERR);
 		}
 	};
 
 	/**
 	 * Go to the next background image. This disables autoplay.
+	 * 
+	 * @throws Error if bgzy.js is not initialized.
 	 */
 	ns.next = function() {
-		if(ready && !busy) {
-			stop();
-			play();
+		if(ready) {
+			if(!busy) {
+				stop();
+				play();
+			}
+		} else {
+			throw new Error(NOT_INITIALIZED_ERR);
 		}
 	};
 
 	/**
 	 * Go to the previous background image. This disables autoplay.
+	 * 
+	 * @throws Error if bgzy.js is not initialized.
 	 */
 	ns.prev = function() {
-		if(ready && !busy) {
-			stop();
-			play(-1);
+		if(ready) {
+			if(!busy) {
+				stop();
+				play(-1);
+			} 
+		} else {
+			throw new Error(NOT_INITIALIZED_ERR);
 		}
 	};
 

@@ -1,17 +1,17 @@
-# bgzy.js
+# Bgzy.js
 Elegant background slideshow.
 Check out a working example at: https://ninocamdzic.github.io/bgzy
 
-## 1. Features
+## Features
 - Uses CSS3 transitions.
 - Set for each background a different transition.
 - No third party libraries required.
 - API for controlling the slideshow.
 
-## 2. Browser support
+## Browser support
 All modern browsers and IE11+ are supported.
 
-## 3. Setup
+## Setup
 1. Include bgzy.css.
 2. Include bgzy.js.
 3. Initiatie bgzy.
@@ -32,7 +32,7 @@ bgzy.inst([
 	["img/bg3.jpg", "slideLeft"]
 ]);
 ```
-## 4. Options
+## Options
 |Option|Default|Description|
 |---|---|---|
 |autoplay|true|Whether to start the slideshow when the page loads.
@@ -55,7 +55,7 @@ bgzy.init([
 	showTicker: true
 });
 ```
-## 5. API
+## API
 |Method|Returns|Description|
 |---|---|---|
 |play|-|Starts the slideshow. This enables autoplay.|
@@ -63,10 +63,9 @@ bgzy.init([
 |next|-|Go to the next background image. This disables autoplay.|
 |prev|-|Go to the previous background image. This disables autoplay.|
 
-### Accessing the methods. ###
+### Accessing the methods ###
 ```javascript
-// Make sure you already have initialized bgzy.js before calling
-// any API methods.
+// Make sure you already have initialized bgzy.js before calling any API methods.
 bgzy.next();
 ```
 ### Todo
